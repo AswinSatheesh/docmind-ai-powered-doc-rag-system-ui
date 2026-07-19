@@ -30,7 +30,7 @@ export const apiClient = async(endpoint : string,options: RequestOptions ={})=>{
 
     // Handle plain text responses (like our AI answers/summaries) securely
     const contentType = response.headers.get('content-type');
-    if(contentType && contentType.includes('application/josn')){
+    if(contentType && contentType.includes('application/json')){
         return response.json();
     }
     return response.text();
