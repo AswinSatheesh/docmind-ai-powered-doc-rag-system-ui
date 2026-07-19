@@ -4,7 +4,7 @@ export const ProtectedRoute =()=>{
         
     // 🔐 Simulation: In Phase 4, we will read this token dynamically from our AuthContext/LocalStorage.
     // Change this to 'false' to test the guard blocking access!
-    const isAuthenticated = false;
+    const isAuthenticated = true;
 
     if(!isAuthenticated){
         // 🚷 Not logged in? Redirect them to the login screen immediately.
