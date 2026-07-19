@@ -1,7 +1,7 @@
 import { useState,useEffect } from "react";
 import type {Document} from '../types/document';
 
-const MOCK_DOCUMENTS : Document[] = [
+const INITIAL_DOCUMENTS : Document[] = [
         {
             id: 'doc-1',
             name: 'Q3_Financial_Report.pdf',
@@ -17,42 +17,66 @@ const MOCK_DOCUMENTS : Document[] = [
             fileSize: '1.1 MB',
             status: 'Processed',
             summary: 'Comprehensive analysis of the PTE test sections. Highlights scoring algorithms across Speaking & Writing, Reading, and Listening modules. Recommends focusing heavily on "Read Aloud" and "Write from Dictation" items for maximal integrated score weights.'
-        },
-        {
-            id: 'doc-3',
-            name: 'Employee_Handbook_2026.pdf',
-            uploadDate: '2026-07-18',
-            fileSize: '4.8 MB',
-            status: 'Processing',
-            summary: 'AI is currently analyzing this document. Summary will be generated automatically upon extraction completions.'
         }
     ];
 
 export const Dashboard =() =>{
+    //// 💾 State managing our list of files dynamically
+    const[documents,setDocuments] = useState<Document[]>(INITIAL_DOCUMENTS);
     // Track which document is selected for detail viewing
-    const[selectedDocId,setSelectedDocId] = useState<string>(MOCK_DOCUMENTS[0].id);
+    const[selectedDocId,setSelectedDocId] = useState<string>(INITIAL_DOCUMENTS[0].id);
     
-    // Find the full object details of the currently clicked document
-    const currentDoc = MOCK_DOCUMENTS.find(doc => doc.id === selectedDocId);
+    // Find active item details
+    const currentDoc = documents.find(doc => doc.id === selectedDocId);
+
+    // ✍️ State to track the text entered in the upload input box
+    const[newFileName,setNewFileName] = useState<string>('');
+
+    // 🚀 Handler function to simulate uploading a file
+    const handleMockUpload =(e : React.SubmitEvent)=>{
+        e.preventDefault();
+        if(!newFileName.trim()) return;
+
+        const newFile : Document ={
+            id : `doc-${Date.now()}`,
+            name : newFileName.endsWith('.pdf') ? newFileName : `${newFileName}.pdf`,
+            uploadDate : new Date().toISOString().split('T')[0],
+            fileSize : '1.5 MB',
+            summary : 'AI extraction pipeline active. Synthesizing structural document abstract summary...',
+            status : 'Processing'
+        }
+        // Append the new file item to our running collection state array
+        setDocuments(prevDocs => [newFile, ...prevDocs]);
+        setSelectedDocId(newFile.id);
+        setNewFileName('');
+    };
 
     return(
         <>
             {/* // 📦 Parent Container: Holds our columns */}
             <div style={{display : 'flex', gap: '2rem',height: 'calc(100vh -120px)'}}>
                 {/* //left side : File Manager Navigation */}
-                <div  style={{
-                    flex:'1',background: 'white',
-                    borderRadius: '8px',
-                    padding: '1.5rem',boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                    display: 'flex',flexDirection: 'column',
-                    gap: '1rem'}}>
+                <div style={{flex: '1', display: 'flex', flexDirection: 'column',gap: '1.5rem'}}>
+
+                    <div>
+                        <h3 style={{margin: '0 0 1rem 0'}}>Upload Document</h3>
+                        <form onSubmit={handleMockUpload} style={{display: 'flex', gap : '0.5rem'}}>
+                            <input type="text" value={newFileName} onChange={(e)=> setNewFileName(e.target.value)}
+                            placeholder="Enter document name..."
+                            style={{flex: 1, padding: '0.5rem',borderRadius: '4px', border: '1px solid #cbd5e1'}} />
+                            <button type="submit" style={{ background: '#2563eb', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Upload</button>
+                        </form>
+                    </div>
+
+                    {/* 📏 Divider line separating upload block from list block */}
+
 
                     <h3 style={{ margin: 0, color: '#1e293b' }}>Your Documents</h3>
                     <hr style={{ border: '0', borderTop: '1px solid #e2e8f0', margin: '0' }}/>
                     
                     {/* left side each document box */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', overflowY: 'auto' }}>
-                        {MOCK_DOCUMENTS.map((doc)=>{
+                        {documents.map((doc)=>{
                             const isSelected = doc.id === selectedDocId;
                             return(
                                 <button 
