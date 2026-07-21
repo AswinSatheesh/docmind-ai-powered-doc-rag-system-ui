@@ -1,10 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export const ProtectedRoute =()=>{
         
-    // 🔐 Simulation: In Phase 4, we will read this token dynamically from our AuthContext/LocalStorage.
-    // Change this to 'false' to test the guard blocking access!
-    const isAuthenticated = true;
+    // const isAuthenticated = true;
+
+    // 2. Extract the live isAuthenticated state from your AuthContext global store
+    const {isAuthenticated} = useAuth();
 
     if(!isAuthenticated){
         // 🚷 Not logged in? Redirect them to the login screen immediately.
