@@ -16,19 +16,20 @@ function App() {
           <BrowserRouter>
             <Routes>
               {/* 🛡️ SECURITY SHIELD: Everything wrapped inside here requires authentication */}
-              <Route element={<ProtectedRoute />}>
-                  {/* Layout routes serve nested page content views */}
-                  <Route element={<Layout />}>
-                    <Route path='/' element={<Dashboard/>} />
-                  </Route>
-              </Route>
+              <Route element={<Layout />}>
 
-              {/* Auth pages standalone views */}
+              {/* 🔓 Public Routes (Header shows Login / Register) */}
               <Route path='/login' element={<Login />} />
               <Route path='/register' element={<Register />} />
-
+              
+              {/* 🛡️ Protected Routes (Header shows Dashboard / Logout) */}
+                <Route element={<ProtectedRoute />}>
+                  {/* Layout routes serve nested page content views */}
+                    <Route path='/' element={<Dashboard/>} />
+                </Route>
               {/* Global Fallback Route */}
               <Route path='*' element={<NotFound />} />
+              </Route>
             </Routes>
           </BrowserRouter>
       </AuthProvider>

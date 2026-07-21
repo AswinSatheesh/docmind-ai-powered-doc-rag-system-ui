@@ -25,7 +25,7 @@ export const useAuth =() =>{
     const context = useContext(AuthContext);
 
     if(!context){
-        return new Error("useAuth must be used within an AuthProvider guard block");
+        throw new Error("useAuth must be used within an AuthProvider guard block");
     }
     return context;
 }
